@@ -12,12 +12,22 @@
       set_fact:
         pgrole: 'mango'
         intport: '9000'
-        extport: '8686'
+        extport: '3396'
         image: 'hkalexling/mango:latest'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
       include_tasks: '/opt/communityapps/apps/_core.yml'
+
+    - name: 'Checking for existing config file'
+      stat:
+        path: '/opt/appdata/{{pgrole}}/config/config.yml'
+      register: stat_result
+
+    - name: 'Clone config for first use'
+      include_tasks: '/opt/communityapps/apps/templates/mango/config.yml'
+      when: stat_result.stat.exists == False
+      ignore_errors: yes
 
     # LABELS ######################################################################
     - name: 'Adding Traefik'
@@ -41,8 +51,9 @@
       set_fact:
         pg_volumes:
           - '/etc/localtime:/etc/localtime:ro'
-          - '/opt/appdata/{{pgrole}}:/root/.config/mango'
-          - '{{path.stdout}}:{{path.stdout}}'
+          - '/opt/appdata/{{pgrole}}/config:/root/.config/mango'
+          - '/opt/appdata/{{pgrole}}:/root/mango/'
+          - '{{path.stdout}}/unionfs/Manga:/root/mango/library'
 
     - name: 'Setting {{pgrole}} ENV'
       set_fact:
