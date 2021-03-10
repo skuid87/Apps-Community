@@ -42,7 +42,7 @@
         pg_volumes:
           - '/etc/localtime:/etc/localtime:ro'
           - '/opt/appdata/{{pgrole}}:/config'
-          - '{{path.stdout}}:{{path.stdout}}'
+          - '/opt/appdata/plex/database/Library/Application Support/Plex Media Server:/plexdata'
 
     - name: 'Setting {{pgrole}} ENV'
       set_fact:
@@ -52,6 +52,7 @@
           TMDB_API_KEY: ''
           TVDB_API_KEY: ''
           UNLOCK_FOR_NEW_TV_AGENT: ''
+          RUN_EVERY_N_HOURS: '24'
           IGNORE_LIBS: ''
           CAPABILITIES: ''
           JVM_MAX_HEAP: '512m'
