@@ -49,6 +49,12 @@
         pg_env:
           PUID: '1000'
           PGID: '1000'
+          TMDB_API_KEY: ''
+          TVDB_API_KEY: ''
+          UNLOCK_FOR_NEW_TV_AGENT: ''
+          IGNORE_LIBS: ''
+          CAPABILITIES: ''
+          JVM_MAX_HEAP: '512m'
 
     # MAIN DEPLOYMENT #############################################################
     - name: 'Deploying {{pgrole}}'
