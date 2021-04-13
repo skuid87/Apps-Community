@@ -8,10 +8,10 @@
     # FACTS #######################################################################
     - name: 'Set Known Facts'
       set_fact:
-        pgrole: 'komga'
-        intport: '8080'
-        extport: '8090'
-        image: 'gotson/komga'
+        pgrole: 'kod'
+        intport: '80'
+        extport: '81'
+        image: 'yangxuan8282/kodexplorer'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
@@ -38,8 +38,8 @@
     - name: 'Setting {{pgrole}} Volumes'
       set_fact:
         pg_volumes:
-          - '/opt/appdata/{{pgrole}}config:/name of folder'
-          - '{{path.stdout}}/unionfs/books:/books'
+          - '/opt/appdata/{{pgrole}}:/var/www/html'
+          - '{{path.stdout}}:{{path.stdout}}'
           - '/etc/localtime:/etc/localtime:ro'
 
     - name: 'Setting {{pgrole}} ENV'
@@ -47,7 +47,6 @@
         pg_env:
           PUID: '1000'
           PGID: '1000'
-          KOMGA_LIBRARIES_SCAN_DIRECTORY_EXCLUSIONS: '#recycle,@eaDir'
 
     # MAIN DEPLOYMENT #############################################################
     - name: 'Deploying {{pgrole}}'
@@ -66,4 +65,3 @@
               - '{{pgrole}}'
         state: started
         labels: '{{pg_labels}}'
-
