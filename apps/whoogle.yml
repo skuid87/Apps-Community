@@ -1,33 +1,27 @@
-#!/bin/bash
-# 
-# Title:      overseer
-# Author(s):  smashingtags
-# URL:        https://github.com/sct/overseerr
-# GNU:        General Public License v3.0
 ################################################################################
 ---
 - hosts: localhost
   gather_facts: false
   tasks:
-    # FACTS #######################################################################
+    # CORE (MANDATORY) DO NOT CHANGE ###########################################
+
     - name: 'Set Known Facts'
       set_fact:
-        pgrole: 'overseer'
-        intport: '5055'
-        extport: '5055'
-        image: 'sctx/overseerr'
+        pgrole: 'whoogle'
+        intport: '5000'
+        extport: '5002'
+        image: 'benbusby/whoogle-search'
 
-    # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
       include_tasks: '/opt/communityapps/apps/_core.yml'
 
-    # LABELS ######################################################################
-    - name: 'Adding Traefik'
+    # LABELS #### KEEPS BOTTOM CLEAN ###########################################
+    - name: 'Adding Traefik for {{pgrole}} '
       set_fact:
         pg_labels:
+          traefik.frontend.auth.forward.address: '{{gauth}}'
           traefik.enable: 'true'
           traefik.port: '{{intport}}'
-          traefik.frontend.auth.forward.address: '{{gauth}}'
           traefik.frontend.rule: 'Host:{{pgrole}}.{{domain.stdout}}{{tldset}}{{cname}}'
           traefik.frontend.headers.SSLHost: '{{domain.stdout}}'
           traefik.frontend.headers.SSLRedirect: 'true'
@@ -42,17 +36,16 @@
     - name: 'Setting {{pgrole}} Volumes'
       set_fact:
         pg_volumes:
-          - '/opt/appdata/{{pgrole}}:/app/config'
+          - '/opt/appdata/{{pgrole}}:/config:rw'
 
     - name: 'Setting {{pgrole}} ENV'
       set_fact:
         pg_env:
           PUID: '1000'
           PGID: '1000'
-          TZ: 'America/New_York'
-          LOG_LEVEL: 'info'
 
-    # MAIN DEPLOYMENT #############################################################
+    # MAIN SCRIPT ##############################################################
+
     - name: 'Deploying {{pgrole}}'
       docker_container:
         name: '{{pgrole}}'
