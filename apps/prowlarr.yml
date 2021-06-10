@@ -15,7 +15,7 @@
         PUID: '1000'
         PGID: '1000'
         TZ: 'Australia/Melbourne'
-        image: 'ghcr.io/linuxserver/prowlarr:latest'
+        image: 'linuxserver/prowlarr:latest'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
