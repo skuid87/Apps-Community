@@ -1,5 +1,4 @@
 #!/bin/bash
-#
 # Author(s):  Shadowtor
 # GNU:        General Public License v3.0
 ################################################################################
@@ -10,10 +9,16 @@
     # FACTS #######################################################################
     - name: 'Set Known Facts'
       set_fact:
-        pgrole: 'flaresolverr'
-        intport: '8191'
-        extport: '8191'
-        image: 'flaresolverr/flaresolverr:latest'
+        pgrole: 'airdcpp'
+        intport: '5600'
+        extport: '5600'
+        intport1: '5601'
+        extport1: '5601'
+        intport2: '21248'
+        extport2: '21248'
+        intport3: '21249'
+        extport3: '21249'
+        image: 'gangefors/airdcpp-webclient:latest'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
@@ -41,7 +46,9 @@
       set_fact:
         pg_volumes:
           - '/etc/localtime:/etc/localtime:ro'
-          - '/opt/appdata/{{pgrole}}:/home/flaresolverr'
+          - '/opt/appdata/{{pgrole}}/share:/Share'
+          - '/opt/appdata/{{pgrole}}/downloads:/Downloads'
+          - '/opt/appdata/{{pgrole}}/config:/.airdcpp'
           - '{{path.stdout}}:{{path.stdout}}'
 
     - name: 'Setting {{pgrole}} ENV'
@@ -49,7 +56,7 @@
         pg_env:
           PUID: '1000'
           PGID: '1000'
-          CAPTCHA_SOLVER: 'hcaptcha-solver'
+          TZ: 'Australia/Melbourne'
 
     # MAIN DEPLOYMENT #############################################################
     - name: 'Deploying {{pgrole}}'

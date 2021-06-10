@@ -10,10 +10,10 @@
     # FACTS #######################################################################
     - name: 'Set Known Facts'
       set_fact:
-        pgrole: 'flaresolverr'
-        intport: '8191'
-        extport: '8191'
-        image: 'flaresolverr/flaresolverr:latest'
+        pgrole: 'airsonic'
+        intport: '4040'
+        extport: '4040'
+        image: 'airsonicadvanced/airsonic-advanced'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
@@ -41,7 +41,11 @@
       set_fact:
         pg_volumes:
           - '/etc/localtime:/etc/localtime:ro'
-          - '/opt/appdata/{{pgrole}}:/home/flaresolverr'
+          - '/opt/appdata/{{pgrole}}:/var/airsonic'
+          - '/opt/appdata/{{pgrole}}/playlists:/var/playlists'
+          - '/opt/appdata/{{pgrole}}/podcasts:/var/podcast'
+          - '/opt/appdata/{{pgrole}}/music:/var/music'
+
           - '{{path.stdout}}:{{path.stdout}}'
 
     - name: 'Setting {{pgrole}} ENV'
@@ -49,13 +53,13 @@
         pg_env:
           PUID: '1000'
           PGID: '1000'
-          CAPTCHA_SOLVER: 'hcaptcha-solver'
 
     # MAIN DEPLOYMENT #############################################################
     - name: 'Deploying {{pgrole}}'
       docker_container:
         name: '{{pgrole}}'
         image: '{{image}}'
+        user: '1000:1000'
         pull: yes
         published_ports:
           - '{{ports.stdout}}{{extport}}:{{intport}}'

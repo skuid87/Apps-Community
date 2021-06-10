@@ -1,5 +1,5 @@
 #!/bin/bash
-#
+
 # Author(s):  Shadowtor
 # GNU:        General Public License v3.0
 ################################################################################
@@ -10,12 +10,12 @@
     # FACTS #######################################################################
     - name: 'Set Known Facts'
       set_fact:
-        pgrole: 'flaresolverr'
-        intport: '8191'
-        extport: '8191'
-        image: 'flaresolverr/flaresolverr:latest'
+        pgrole: 'updatetool'
+        intport: '9788'
+        extport: '9788'
+        image: 'mynttt/updatetool:latest'
 
-    # CORE (MANDATORY) ############################################################
+  # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
       include_tasks: '/opt/communityapps/apps/_core.yml'
 
@@ -41,15 +41,21 @@
       set_fact:
         pg_volumes:
           - '/etc/localtime:/etc/localtime:ro'
-          - '/opt/appdata/{{pgrole}}:/home/flaresolverr'
-          - '{{path.stdout}}:{{path.stdout}}'
+          - '/opt/appdata/{{pgrole}}:/config'
+          - '/opt/appdata/plex/database/Library/Application Support/Plex Media Server:/plexdata'
 
     - name: 'Setting {{pgrole}} ENV'
       set_fact:
         pg_env:
           PUID: '1000'
           PGID: '1000'
-          CAPTCHA_SOLVER: 'hcaptcha-solver'
+          TMDB_API_KEY: ''
+          TVDB_API_KEY: ''
+          UNLOCK_FOR_NEW_TV_AGENT: ''
+          RUN_EVERY_N_HOURS: '24'
+          IGNORE_LIBS: ''
+          CAPABILITIES: ''
+          JVM_MAX_HEAP: '512m'
 
     # MAIN DEPLOYMENT #############################################################
     - name: 'Deploying {{pgrole}}'

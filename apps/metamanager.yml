@@ -1,5 +1,5 @@
 #!/bin/bash
-#
+
 # Author(s):  Shadowtor
 # GNU:        General Public License v3.0
 ################################################################################
@@ -10,10 +10,10 @@
     # FACTS #######################################################################
     - name: 'Set Known Facts'
       set_fact:
-        pgrole: 'flaresolverr'
-        intport: '8191'
-        extport: '8191'
-        image: 'flaresolverr/flaresolverr:latest'
+        pgrole: 'meta-manager'
+        intport: '9787'
+        extport: '9787'
+        image: 'meisnate12/plex-meta-manager:latest'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
@@ -41,7 +41,7 @@
       set_fact:
         pg_volumes:
           - '/etc/localtime:/etc/localtime:ro'
-          - '/opt/appdata/{{pgrole}}:/home/flaresolverr'
+          - '/opt/appdata/{{pgrole}}:/config'
           - '{{path.stdout}}:{{path.stdout}}'
 
     - name: 'Setting {{pgrole}} ENV'
@@ -49,7 +49,6 @@
         pg_env:
           PUID: '1000'
           PGID: '1000'
-          CAPTCHA_SOLVER: 'hcaptcha-solver'
 
     # MAIN DEPLOYMENT #############################################################
     - name: 'Deploying {{pgrole}}'
