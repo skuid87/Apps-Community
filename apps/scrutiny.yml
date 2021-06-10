@@ -9,10 +9,10 @@
     # FACTS #######################################################################
     - name: 'Set Known Facts'
       set_fact:
-        pgrole: 'prowlarr'
-        intport: '9696'
-        extport: '9696'
-        image: 'linuxserver/prowlarr:nightly'
+        pgrole: 'scrutiny'
+        intport: '8080'
+        extport: '7358'
+        image: 'linuxserver/scrutiny:latest'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
@@ -49,6 +49,9 @@
           PUID: '1000'
           PGID: '1000'
           TZ: 'Australia/Melbourne'
+          SCRUTINY_WEB: 'True'
+          SCRUTINY_COLLECTOR: 'True'
+          SCRUTIN_API_ENDPOINT: '{{pgrole}}.{{domain.stdout}}:{{extport}}'
 
     # MAIN DEPLOYMENT #############################################################
     - name: 'Deploying {{pgrole}}'
@@ -58,6 +61,9 @@
         pull: yes
         published_ports:
           - '{{ports.stdout}}{{extport}}:{{intport}}'
+        cap_add:
+          - SYS_RAWIO
+          - SYS_ADMIN
         volumes: '{{pg_volumes}}'
         env: '{{pg_env}}'
         restart_policy: unless-stopped

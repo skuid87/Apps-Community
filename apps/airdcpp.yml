@@ -9,10 +9,16 @@
     # FACTS #######################################################################
     - name: 'Set Known Facts'
       set_fact:
-        pgrole: 'prowlarr'
-        intport: '9696'
-        extport: '9696'
-        image: 'linuxserver/prowlarr:nightly'
+        pgrole: 'airdcpp'
+        intport: '5600'
+        extport: '5600'
+        intport1: '5601'
+        extport1: '5601'
+        intport2: '21248'
+        extport2: '21248'
+        intport3: '21249'
+        extport3: '21249'
+        image: 'gangefors/airdcpp-webclient:latest'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
@@ -40,7 +46,9 @@
       set_fact:
         pg_volumes:
           - '/etc/localtime:/etc/localtime:ro'
-          - '/opt/appdata/{{pgrole}}:/config'
+          - '/opt/appdata/{{pgrole}}/share:/Share'
+          - '/opt/appdata/{{pgrole}}/downloads:/Downloads'
+          - '/opt/appdata/{{pgrole}}/config:/.airdcpp'
           - '{{path.stdout}}:{{path.stdout}}'
 
     - name: 'Setting {{pgrole}} ENV'
