@@ -10,10 +10,10 @@
     # FACTS #######################################################################
     - name: 'Set Known Facts'
       set_fact:
-        pgrole: 'meta-manager'
-        intport: '9787'
-        extport: '9787'
-        image: 'meisnate12/plex-meta-manager:latest'
+        pgrole: 'plex-image-cleanup'
+        intport: '9788'
+        extport: '9788'
+        image: 'meisnate12/plex-image-cleanup'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
@@ -67,3 +67,4 @@
               - '{{pgrole}}'
         state: started
         labels: '{{pg_labels}}'
+##PG-Community
